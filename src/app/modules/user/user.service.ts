@@ -74,13 +74,12 @@ const getProductFromDB = async (userId: number) => {
   return result;
 };
 const getTotalProductPriceFromDB = async (userId: number) => {
-  const result = await User.findOne({ userId }).select("-_id orders.price");
-  console.log(result?.orders);
-  const totalPrice = result?.orders?.reduce(
-    (sum, order) => sum + order.price,
-    0
+  const result = await User.findOne({ userId }).select(
+    "-_id userId orders.price orders.quantity"
   );
-  return totalPrice;
+  // console.log(result);
+
+  return result;
 };
 export const UserServices = {
   createUserToDB,

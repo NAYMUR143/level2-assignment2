@@ -204,15 +204,24 @@ const getAllProductToUser = async (req: Request, res: Response) => {
 const getTotalPriceOfProduct = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+
     const result = await UserServices.getTotalProductPriceFromDB(
       Number(userId)
     );
+    console.log(result?.orders);
+
     if (result) {
+      const price = result?.orders?.reduce(
+        (sum, order) => sum + order.price * order.quantity,
+        0
+      );
       res.status(200).json({
         success: true,
-        message: "Order fetched successfully!",
+        message: result?.orders
+          ? "Total price calculated successfully!"
+          : "Don't have any order to calculate",
         data: {
-          totalPrice: result,
+          totalPrice: price,
         },
       });
       return;
